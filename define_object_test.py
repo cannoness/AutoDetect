@@ -376,11 +376,26 @@ def InteractObject(frame,thresh1,thresh2,hsv,ang,obj_names,centers,hist_list, th
             if len(approx) >= 3 and hand_check > 50:    
 #                person2 = cv2.GaussianBlur(cv2.cvtColor(fr, cv2.COLOR_BGR2GRAY),(11,11),0)
                 gray = cv2.cvtColor(frame[y:y+h,x:x+w],cv2.COLOR_BGR2GRAY)
-                person2 = cv2.resize(gray, (128,128))
+                max_height = gray.shape[0]
+                max_width = gray.shape[1]
+                height = 128
+                width = 128
+                if max_height < height or max_width < width:
+                    # get scaling factor
+                    scaling_factor = max_height / float(height)
+                    max_height = 128
+                    if max_width/float(width) < scaling_factor:
+                        scaling_factor = max_width / float(width)
+                        max_width = 128
+                    # resize image
+                    gray = cv2.resize(gray, None, fx=scaling_factor, fy=scaling_factor)
+                # fill excess by zero padding the image
+                zero_padded = np.zeros((height,width,3), np.uint8)
+                zero_padded[:max_height,:max_width] = gray
 #                person1  = cv2.GaussianBlur(gray,(3,3),0)
 #                person2 = cv2.adaptiveThreshold(person1,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
 #                                               cv2.THRESH_BINARY,21,2)
-                person2 = cv2.medianBlur(person2,5)
+                person2 = cv2.medianBlur(zero_padded,5)
 #                hist = cv2.calcHist(person2[y:y+h,x:x+w],[0,1],None,[256,256],[0,256,0,256])
         
 #                hist = hist/hist.ravel().sum()
@@ -489,11 +504,27 @@ def InteractObject(frame,thresh1,thresh2,hsv,ang,obj_names,centers,hist_list, th
             if ar <= 1.5 and ar >= 0.50:    
                 
                 gray = cv2.cvtColor(frame[y:y+h,x:x+w] ,cv2.COLOR_BGR2GRAY)
-                person2 = cv2.resize(gray, (128,128))
+                max_height = gray.shape[0]
+                max_width = gray.shape[1]
+                height = 128
+                width = 128
+                if max_height < height or max_width < width:
+                    # get scaling factor
+                    scaling_factor = max_height / float(height)
+                    max_height = 128
+                    if max_width/float(width) < scaling_factor:
+                        scaling_factor = max_width / float(width)
+                        max_width = 128
+                    # resize image
+                    gray = cv2.resize(gray, None, fx=scaling_factor, fy=scaling_factor)
+                # fill excess by zero padding the image
+                zero_padded = np.zeros((height,width,3), np.uint8)
+                zero_padded[:max_height,:max_width] = gray
+                
 #                person1  = cv2.GaussianBlur(gray,(3,3),0)
 #                person2 = cv2.adaptiveThreshold(person1,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
 #                                               cv2.THRESH_BINARY,21,2)
-                person2 = cv2.medianBlur(person2,5)
+                person2 = cv2.medianBlur(zero_padded,5)
 #                hist = cv2.calcHist(person2[y:y+h,x:x+w],[0,1],None,[256,256],[0,256,0,256])
         
 #                hist = hist/hist.ravel().sum()
