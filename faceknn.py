@@ -49,7 +49,7 @@ def KNN(which, path):
             zero_padded = np.zeros((height,width,3), np.uint8)
             zero_padded[:max_height,:max_width] = fil
 
-            fil = cv2.dilate(fil,None,1)
+            fil = cv2.dilate(zero_padded,None,1)
 #            hist = cv2.calcHist(fil, [0,1],None,[256,256],[0,256,0,256])
 #            hist = hist/hist.ravel().sum()
             y.append(0)
@@ -78,7 +78,7 @@ def KNN(which, path):
 #            person = cv2.GaussianBlur(gray,(3,3),0)
 #            person = cv2.adaptiveThreshold(person,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
 #                cv2.THRESH_BINARY,21,2)
-            person = cv2.medianBlur(fil,5)
+            person = cv2.medianBlur(zero_padded,5)
 #            hist = cv2.calcHist(person, [0,1],None,[256,256],[0,256,0,256])
 #            
 #            hist = hist/hist.ravel().sum()
@@ -154,7 +154,7 @@ def KNN(which, path):
             kernel2 = np.array([[0, -1, 0],
                                [-1, 5, -1],
                                 [0, -1, 0]])
-            blurred = cv2.filter2D(fil, -1, kernel2)
+            blurred = cv2.filter2D(zero_padded, -1, kernel2)
             blurred = cv2.medianBlur(blurred, 5)
 
             y.append(0)
@@ -183,7 +183,7 @@ def KNN(which, path):
             kernel2 = np.array([[0, -1, 0],
                                [-1, 5, -1],
                                 [0, -1, 0]])
-            blurred = cv2.filter2D(fil, -1, kernel2)
+            blurred = cv2.filter2D(zero_padded, -1, kernel2)
             blurred = cv2.medianBlur(blurred, 5)
             y.append(1)
             X.append(blurred)
@@ -211,7 +211,7 @@ def KNN(which, path):
             kernel2 = np.array([[0, -1, 0],
                                [-1, 5, -1],
                                 [0, -1, 0]])
-            blurred = cv2.filter2D(fil, -1, kernel2)
+            blurred = cv2.filter2D(zero_padded, -1, kernel2)
             blurred = cv2.medianBlur(blurred, 5)
             y.append(2)
             X.append(blurred)
